@@ -14,13 +14,6 @@ import random
 import datetime as dt
 import gc
 
-
-def main():
-    [train,test,properties] = load_data()
-   # data_cleaning(train,test,properties)
-    a = 0
-
-
 def load_data():
     # Load the Datasets #
     # We need to load the datasets that will be needed to train our machine learning algorithms, handle our data and make predictions.
@@ -36,6 +29,7 @@ def load_data():
     print("Training Size:" + str(train.shape))
     print("Property Size:" + str(properties.shape))
     print("Sample Size:" + str(test.shape))
+
 
     # Type Converting the DataSet
     # The processing of some of the algorithms can be made quick if data
@@ -56,12 +50,14 @@ def load_data():
         if test[column].dtype == float:
             test[column] = test[column].astype(np.float32)
 
+
+
     #living area proportions
     properties['living_area_prop'] = properties['calculatedfinishedsquarefeet'] / properties['lotsizesquarefeet']
     #tax value ratio
     properties['value_ratio'] = properties['taxvaluedollarcnt'] / properties['taxamount']
     #tax value proportions
-    properties['value_prop'] = properties['structuretaxvaluedollarcnt'] / properties['landtaxvaluedollarcnt']
+    properties['value_prop'] = properties['structuretaxvaluedollarcnt'] / properties['landtaxvaluedollarcnt'] # built structure value / value of land
 
 
     ###Merging the Datasets ###
@@ -71,10 +67,26 @@ def load_data():
     df_train = train.merge(properties, how='left', on='parcelid')
     df_test = test.merge(properties, how='left', on='parcelid')
 
+    df_train_small = df_train[:5000]
+    df_test_small = df_test[:2000]
+
 
     ### Remove previos variables to keep some memory
-    del properties, train
+    del properties, train,df_test,df_train
     gc.collect()
+
+    df_train = df_train_small
+    df_test = df_test_small
+
+    df_train.to_pickle('small_train.pkl')
+    df_test.to_pickle('small_test.pkl')
+
+    del df_train,df_test
+    gc.collect()
+
+    df_train = pd.read_pickle('small_train.pkl')
+    df_test = pd.read_pickle('small_test.pkl')
+
 
     print('Memory usage reduction...')
     df_train[['latitude', 'longitude']] /= 1e6
@@ -83,6 +95,11 @@ def load_data():
     df_train['censustractandblock'] /= 1e12
     df_test['censustractandblock'] /= 1e12
 
+
+    # Finding the percentage of missing values
+    cnt = {}
+    for c in df_train.columns:
+        cnt[c]= df_train[c].isnull().sum()
 
     # Label Encoding For Machine Learning &amp; Filling Missing Values
     #
@@ -180,6 +197,14 @@ def load_data():
     print('Preparing the csv file ...')
     sample_file.to_csv('xgb_predicted_results.csv', index=False, float_format='%.4f')
     print("Finished writing the file")
+
+
+
+def main():
+    [train,test,properties] = load_data()
+   # data_cleaning(train,test,properties)
+    a = 0
+
 
 
 if __name__ == "__main__":
