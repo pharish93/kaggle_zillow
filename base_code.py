@@ -13,11 +13,15 @@ import xgboost as  xgb
 import random
 import datetime as dt
 import gc
+from sklearn.preprocessing import LabelEncoder
 
-def load_data():
+def load_full_data():
+
     # Load the Datasets #
-    # We need to load the datasets that will be needed to train our machine learning algorithms, handle our data and make predictions.
-    # Note that these datasets are the ones that are already provided once you enter the competition by accepting terms and conditions
+    # We need to load the datasets that will be needed to train our machine learning algorithms,
+    #  handle our data and make predictions.
+    # Note that these datasets are the ones that are already provided once you enter the
+    # competition by accepting terms and conditions
 
     train = pd.read_csv('./data/train_2016_v2.csv', parse_dates=["transactiondate"])
     properties = pd.read_csv('./data/properties_2016.csv')
@@ -51,41 +55,47 @@ def load_data():
             test[column] = test[column].astype(np.float32)
 
 
-
-    #living area proportions
-    properties['living_area_prop'] = properties['calculatedfinishedsquarefeet'] / properties['lotsizesquarefeet']
-    #tax value ratio
-    properties['value_ratio'] = properties['taxvaluedollarcnt'] / properties['taxamount']
-    #tax value proportions
-    properties['value_prop'] = properties['structuretaxvaluedollarcnt'] / properties['landtaxvaluedollarcnt'] # built structure value / value of land
-
-
     ###Merging the Datasets ###
-
     # We are merging the properties dataset with training and testing dataset for model building and testing prediction #
 
     df_train = train.merge(properties, how='left', on='parcelid')
     df_test = test.merge(properties, how='left', on='parcelid')
 
-    df_train_small = df_train[:5000]
-    df_test_small = df_test[:2000]
+    if 0:
+        # creating a sub sample of data
+        df_train_small = df_train[:10000]
+        df_test_small = df_test[:5000]
 
+        df_train = df_train_small
+        df_test = df_test_small
+
+        df_train.to_pickle('./cache/small_train.pkl')
+        df_test.to_pickle('./cache/small_test.pkl')
 
     ### Remove previos variables to keep some memory
-    del properties, train,df_test,df_train
+    del properties, train
     gc.collect()
 
-    df_train = df_train_small
-    df_test = df_test_small
+    return df_train, df_test
 
-    df_train.to_pickle('small_train.pkl')
-    df_test.to_pickle('small_test.pkl')
 
-    del df_train,df_test
-    gc.collect()
+def load_small_data():
+    df_train = pd.read_pickle('./cache/small_train.pkl')
+    df_test = pd.read_pickle('./cache/small_test.pkl')
 
-    df_train = pd.read_pickle('small_train.pkl')
-    df_test = pd.read_pickle('small_test.pkl')
+    return df_train,df_test
+
+def data_preprocessing(df_train,df_test):
+
+    # living area proportions
+    df_train['living_area_prop'] = df_train['calculatedfinishedsquarefeet'] / df_train['lotsizesquarefeet']
+    df_test['living_area_prop'] = df_test['calculatedfinishedsquarefeet'] / df_test['lotsizesquarefeet']
+    # tax value ratio
+    df_train['value_ratio'] = df_train['taxvaluedollarcnt'] / df_train['taxamount']
+    df_test['value_ratio'] = df_test['taxvaluedollarcnt'] / df_test['taxamount']
+    # tax value proportions
+    df_train['value_prop'] = df_train['structuretaxvaluedollarcnt'] / df_train['landtaxvaluedollarcnt']  # built structure value / value of land
+    df_test['value_prop'] = df_test['structuretaxvaluedollarcnt'] / df_test['landtaxvaluedollarcnt']
 
 
     print('Memory usage reduction...')
@@ -95,11 +105,13 @@ def load_data():
     df_train['censustractandblock'] /= 1e12
     df_test['censustractandblock'] /= 1e12
 
+    df_train,df_test=label_encoding(df_train,df_test)
 
-    # Finding the percentage of missing values
-    cnt = {}
-    for c in df_train.columns:
-        cnt[c]= df_train[c].isnull().sum()
+    return df_train,df_test
+
+
+
+def label_encoding(df_train,df_test):
 
     # Label Encoding For Machine Learning &amp; Filling Missing Values
     #
@@ -110,8 +122,6 @@ def load_data():
     # encoding them.
     # This is to ensure that label encoder function does not experience any problems while
     # carrying out its operation #
-
-    from sklearn.preprocessing import LabelEncoder
 
     lbl = LabelEncoder()
     for c in df_train.columns:
@@ -125,6 +135,10 @@ def load_data():
         if df_test[c].dtype == 'object':
             lbl.fit(list(df_test[c].values))
             df_test[c] = lbl.transform(list(df_test[c].values))
+
+    return df_train,df_test
+
+def feature_selection(df_train,df_test):
 
     ### Rearranging the DataSets ###
 
@@ -146,6 +160,10 @@ def load_data():
     x_train = x_train.values
     y_train = df_train['logerror'].values
 
+    y_test = 0
+    return x_train,y_train,x_test,y_test
+
+def model_experiments(x_train,y_train,x_test):
     ### Cross Validation ###
 
     # We are dividing our datasets into the training and validation sets so that
@@ -201,9 +219,12 @@ def load_data():
 
 
 def main():
-    [train,test,properties] = load_data()
-   # data_cleaning(train,test,properties)
-    a = 0
+    # df_train,df_test = load_full_data()
+    df_train, df_test = load_small_data()
+    df_train,df_test = data_preprocessing(df_train,df_test)
+
+    x_train, y_train, x_test,k = feature_selection(df_train,df_test)
+    model_experiments(x_train,y_train,x_test)
 
 
 
