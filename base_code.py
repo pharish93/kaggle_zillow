@@ -14,6 +14,8 @@ import random
 import datetime as dt
 import gc
 from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+
 
 def load_full_data():
 
@@ -72,7 +74,7 @@ def load_full_data():
         df_train.to_pickle('./cache/small_train.pkl')
         df_test.to_pickle('./cache/small_test.pkl')
 
-    ### Remove previos variables to keep some memory
+    ### Remove previous variables to keep some memory
     del properties, train
     gc.collect()
 
@@ -105,8 +107,23 @@ def data_preprocessing(df_train,df_test):
     df_train['censustractandblock'] /= 1e12
     df_test['censustractandblock'] /= 1e12
 
-    df_train,df_test=label_encoding(df_train,df_test)
+    # counting number of missing values
 
+    cnt = {}
+    for c in df_train.columns:
+        k = df_train[c].isnull().sum()
+        cnt[c] = float( k) / df_train.shape[0] * 100
+
+
+    sorted_cnt = sorted(cnt.iteritems(), key=lambda (k, v): (v, k))
+    freq = [ k[1] for k in sorted_cnt]
+
+    plt.bar(range(len(cnt)), freq, align="center")
+    plt.xticks(range(len(cnt)), list(cnt.keys()))
+    plt.show()
+
+
+    df_train,df_test=label_encoding(df_train,df_test)
     return df_train,df_test
 
 
