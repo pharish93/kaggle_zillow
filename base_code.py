@@ -16,6 +16,7 @@ import gc
 from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
 
+DEBUG = 1
 
 def load_full_data():
 
@@ -87,6 +88,21 @@ def load_small_data():
 
     return df_train,df_test
 
+def Display_missing_percentages(train):
+    cnt = {}
+    for c in train.columns:
+        k = train[c].isnull().sum()
+        cnt[c] = float(k) / train.shape[0] * 100
+
+    sorted_cnt = sorted(cnt.iteritems(), key=lambda (k, v): (v, k))
+    freq = [k[1] for k in sorted_cnt]
+
+    plt.bar(range(len(cnt)), freq, align="center")
+    plt.xticks(range(len(cnt)), list(cnt.keys()))
+    plt.show()
+    return cnt
+
+
 def data_preprocessing(df_train,df_test):
 
     # living area proportions
@@ -108,24 +124,67 @@ def data_preprocessing(df_train,df_test):
     df_test['censustractandblock'] /= 1e12
 
     # counting number of missing values
+    cnt = Display_missing_percentages(df_train)
 
-    cnt = {}
+    if DEBUG :
+        print 'Before Dropping Values'
+        print df_train.shape
+        print df_test.shape
+
+    drop_list = []
     for c in df_train.columns:
-        k = df_train[c].isnull().sum()
-        cnt[c] = float( k) / df_train.shape[0] * 100
+        if cnt[c] > 90:
+            if DEBUG :
+                print c
+            drop_list.append(c)
+
+    df_train_new = df_train.drop(drop_list,axis=1)
+    drop_list.extend(('201610', '201611','201612', '201710', '201711', '201712'))
+    df_test_new = df_test.drop(drop_list,axis=1)
 
 
-    sorted_cnt = sorted(cnt.iteritems(), key=lambda (k, v): (v, k))
-    freq = [ k[1] for k in sorted_cnt]
+    df_train = df_train_new
+    df_test = df_test_new
 
-    plt.bar(range(len(cnt)), freq, align="center")
-    plt.xticks(range(len(cnt)), list(cnt.keys()))
-    plt.show()
+    if DEBUG :
+        print 'After Dropping Values'
+        print df_train.shape
+        print df_test.shape
 
+    cnt_new = Display_missing_percentages(df_train)
 
+    random_forest_importance(df_train)
     df_train,df_test=label_encoding(df_train,df_test)
     return df_train,df_test
 
+from sklearn.ensemble import ExtraTreesClassifier
+def random_forest_importance(df_train):
+    # Build a forest and compute the feature importances
+    forest = ExtraTreesClassifier(n_estimators=250,
+                                  random_state=0)
+    y = df_train['logerror']
+    x_try = df_train.columns[:-1]
+    X = df_train.drop(['parcelid', 'logerror', 'transactiondate' ], axis=1)
+    forest.fit(X, y)
+    importances = forest.feature_importances_
+    std = np.std([tree.feature_importances_ for tree in forest.estimators_],
+                 axis=0)
+    indices = np.argsort(importances)[::-1]
+
+    # Print the feature ranking
+    print("Feature ranking:")
+
+    for f in range(X.shape[1]):
+        print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
+
+    # Plot the feature importances of the forest
+    plt.figure()
+    plt.title("Feature importances")
+    plt.bar(range(X.shape[1]), importances[indices],
+            color="r", yerr=std[indices], align="center")
+    plt.xticks(range(X.shape[1]), indices)
+    plt.xlim([-1, X.shape[1]])
+    plt.show()
 
 
 def label_encoding(df_train,df_test):
@@ -140,9 +199,17 @@ def label_encoding(df_train,df_test):
     # This is to ensure that label encoder function does not experience any problems while
     # carrying out its operation #
 
+    ignore_labels = ['parcelid','transactiondata','logerror']
     lbl = LabelEncoder()
     for c in df_train.columns:
-        df_train[c]=df_train[c].fillna(0)
+
+        if (c != 'parcelid' and c!= 'transactiondate' and c !='logerror'):
+            if df_train[c].dtype == 'object':
+                df_train[c] = df_train[c].fillna(0)
+            else:
+                mean_c = df_train[c].mean()
+                df_train[c]=df_train[c].fillna(mean_c)
+
         if df_train[c].dtype == 'object':
             lbl.fit(list(df_train[c].values))
             df_train[c] = lbl.transform(list(df_train[c].values))
@@ -166,6 +233,8 @@ def feature_selection(df_train,df_test):
     # Make sure to include the same features in the test set as were
     # included in the training set #
 
+
+    k = ['basementsqft','bathroomcnt','censustractandblock']
 
     x_train = df_train.drop(['parcelid', 'logerror', 'transactiondate', 'propertyzoningdesc',
                              'propertycountylandusecode', ], axis=1)
@@ -236,8 +305,8 @@ def model_experiments(x_train,y_train,x_test):
 
 
 def main():
-    # df_train,df_test = load_full_data()
-    df_train, df_test = load_small_data()
+    df_train,df_test = load_full_data()
+    # df_train, df_test = load_small_data()
     df_train,df_test = data_preprocessing(df_train,df_test)
 
     x_train, y_train, x_test,k = feature_selection(df_train,df_test)
