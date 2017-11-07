@@ -16,8 +16,35 @@ import gc
 from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
 from data_exploration import *
+import seaborn as sns
+sns.set(color_codes=True)
 
 DEBUG = 1
+
+def visualize_distribution(properties,df_train,featurename):
+    mean_c = df_train[featurename].mean()
+    df_train[featurename] = df_train[featurename].fillna(mean_c)
+    properties[featurename]=properties[featurename].fillna(mean_c)
+
+
+    ulimit = np.percentile(df_train[featurename], 99)
+    llimit = np.percentile(df_train[featurename], 1)
+    df_train[featurename].ix[df_train[featurename] > ulimit] = ulimit
+    df_train[featurename].ix[df_train[featurename] < llimit] = llimit
+
+    properties[featurename].ix[properties[featurename] > ulimit] = ulimit
+    properties[featurename].ix[properties[featurename] < llimit] = llimit
+
+
+    plt.figure(figsize=(16, 8))
+    sns.kdeplot(df_train[featurename],shade=True,label = 'Train plot')
+    sns.kdeplot(properties[featurename], shade=True, label='Properties plot')
+    plt.xlabel(featurename, fontsize=12)
+    plt.ylabel('Density', fontsize=12)
+    plt.title('Distribution in Properties vs Train Samples')
+    name = 'visualze'+featurename+'.png'
+    plt.savefig(name)
+    plt.show()
 
 def load_full_data():
 
@@ -65,6 +92,9 @@ def load_full_data():
     df_train = train.merge(properties, how='left', on='parcelid')
     df_test = test.merge(properties, how='left', on='parcelid')
 
+    visualize_distribution(properties,df_train,'calculatedfinishedsquarefeet')
+    visualize_distribution(properties, df_train, 'structuretaxvaluedollarcnt')
+
     if 0:
         # creating a sub sample of data
         df_train_small = df_train[:10000]
@@ -101,8 +131,8 @@ def Display_missing_percentages(train):
     plt.figure(figsize=(22, 18))
     plt.barh(range(len(cnt)), freq, align="center")
     plt.yticks(range(len(cnt)), list(cnt.keys()))
-    plt.xlabel('Percentage of missing values')
-    plt.title('Missing value % for each of feature')
+    plt.xlabel('Percentage of missing values',fontsize=12)
+    plt.title('Missing value % for each of feature',fontsize=12)
     plt.savefig('Missing_values.png')
     plt.show()
     return cnt
@@ -156,7 +186,7 @@ def data_preprocessing(df_train,df_test):
         print df_train.shape
         print df_test.shape
 
-    cnt_new = Display_missing_percentages(df_train)
+    # cnt_new = Display_missing_percentages(df_train)
 
     # random_forest_importance(df_train)
     df_train,df_test=label_encoding(df_train,df_test)

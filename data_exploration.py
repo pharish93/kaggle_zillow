@@ -21,6 +21,8 @@ def data_exploration(train_df):
     plt.figure(figsize=(12, 8))
     sns.distplot(train_df.logerror.values, bins=50, kde=False)
     plt.xlabel('logerror', fontsize=12)
+    plt.ylabel('Number of Properties',fontsize = 12)
+    plt.title('Log Error Histogram plot of Train Data')
     plt.savefig('log_error_histogram.png')
     plt.show()
 
