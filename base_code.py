@@ -15,6 +15,7 @@ import datetime as dt
 import gc
 from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
+from data_exploration import *
 
 DEBUG = 1
 
@@ -97,8 +98,12 @@ def Display_missing_percentages(train):
     sorted_cnt = sorted(cnt.iteritems(), key=lambda (k, v): (v, k))
     freq = [k[1] for k in sorted_cnt]
 
-    plt.bar(range(len(cnt)), freq, align="center")
-    plt.xticks(range(len(cnt)), list(cnt.keys()))
+    plt.figure(figsize=(22, 18))
+    plt.barh(range(len(cnt)), freq, align="center")
+    plt.yticks(range(len(cnt)), list(cnt.keys()))
+    plt.xlabel('Percentage of missing values')
+    plt.title('Missing value % for each of feature')
+    plt.savefig('Missing_values.png')
     plt.show()
     return cnt
 
@@ -153,7 +158,7 @@ def data_preprocessing(df_train,df_test):
 
     cnt_new = Display_missing_percentages(df_train)
 
-    random_forest_importance(df_train)
+    # random_forest_importance(df_train)
     df_train,df_test=label_encoding(df_train,df_test)
     return df_train,df_test
 
@@ -307,6 +312,8 @@ def model_experiments(x_train,y_train,x_test):
 def main():
     df_train,df_test = load_full_data()
     # df_train, df_test = load_small_data()
+    data_exploration(df_train)
+
     df_train,df_test = data_preprocessing(df_train,df_test)
 
     x_train, y_train, x_test,k = feature_selection(df_train,df_test)
