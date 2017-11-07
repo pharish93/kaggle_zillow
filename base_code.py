@@ -140,6 +140,9 @@ def Display_missing_percentages(train):
 
 def data_preprocessing(df_train,df_test):
 
+    df_train,df_test=label_encoding(df_train,df_test)
+    random_forest_importance(df_train)
+
     # living area proportions
     df_train['living_area_prop'] = df_train['calculatedfinishedsquarefeet'] / df_train['lotsizesquarefeet']
     df_test['living_area_prop'] = df_test['calculatedfinishedsquarefeet'] / df_test['lotsizesquarefeet']
@@ -187,38 +190,41 @@ def data_preprocessing(df_train,df_test):
         print df_test.shape
 
     # cnt_new = Display_missing_percentages(df_train)
-
-    # random_forest_importance(df_train)
-    df_train,df_test=label_encoding(df_train,df_test)
+    
     return df_train,df_test
 
-from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import RandomForestRegressor
 def random_forest_importance(df_train):
-    # Build a forest and compute the feature importances
-    forest = ExtraTreesClassifier(n_estimators=250,
-                                  random_state=0)
-    y = df_train['logerror']
+     # Build a forest and compute the feature importances
+    forest = RandomForestRegressor(n_estimators=250)
+    y = df_train['logerror'].values.ravel()
+
     x_try = df_train.columns[:-1]
-    X = df_train.drop(['parcelid', 'logerror', 'transactiondate' ], axis=1)
+    X1 = df_train.drop(['parcelid', 'logerror', 'transactiondate'], axis=1)
+
+    X = X1[X1.columns[:-1]].values
     forest.fit(X, y)
     importances = forest.feature_importances_
     std = np.std([tree.feature_importances_ for tree in forest.estimators_],
                  axis=0)
     indices = np.argsort(importances)[::-1]
+    indices = np.flipud(indices)
 
     # Print the feature ranking
     print("Feature ranking:")
-
+    col_names = np.array([])
     for f in range(X.shape[1]):
-        print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
-
+        col_names = np.append(col_names,X1.columns[indices[f]])
+        
     # Plot the feature importances of the forest
+    plt.rcParams.update({'font.size': 7})
     plt.figure()
     plt.title("Feature importances")
-    plt.bar(range(X.shape[1]), importances[indices],
-            color="r", yerr=std[indices], align="center")
-    plt.xticks(range(X.shape[1]), indices)
-    plt.xlim([-1, X.shape[1]])
+    plt.xlabel("Importance")
+    plt.barh(range(X.shape[1]), importances[indices],
+            color="b", yerr=std[indices], align="center")
+    plt.yticks(range(X.shape[1]), col_names)
+    plt.ylim([-1, X.shape[1]])
     plt.show()
 
 
@@ -340,8 +346,8 @@ def model_experiments(x_train,y_train,x_test):
 
 
 def main():
-    df_train,df_test = load_full_data()
-    # df_train, df_test = load_small_data()
+    # df_train,df_test = load_full_data()
+    df_train, df_test = load_small_data()
     data_exploration(df_train)
 
     df_train,df_test = data_preprocessing(df_train,df_test)
