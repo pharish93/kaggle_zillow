@@ -19,6 +19,7 @@ def data_preprocessing(df_train,df_test):
     # df_test['value_prop'] = df_test['structuretaxvaluedollarcnt'] / df_test['landtaxvaluedollarcnt']
     #
 
+    df_train,df_test=label_encoding(df_train,df_test)
     random_forest_importance(df_train)
 
     print('Memory usage reduction...')
@@ -56,10 +57,7 @@ def data_preprocessing(df_train,df_test):
         print df_train.shape
         print df_test.shape
 
-    # cnt_new = Display_missing_percentages(df_train)
 
-    # random_forest_importance(df_train)
-    df_train,df_test=label_encoding(df_train,df_test)
     return df_train,df_test
 
 
