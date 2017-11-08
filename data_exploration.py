@@ -119,4 +119,4 @@ def random_forest_importance(df_train):
     plt.yticks(range(X.shape[1]), col_names)
     plt.ylim([-1, X.shape[1]])
     plt.show()
-    plt.savefig('./images/Feature importance.png')
+    plt.savefig('./images/Feature_importance.png')
