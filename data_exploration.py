@@ -62,7 +62,7 @@ def visualize_distribution(properties,df_train,featurename):
     plt.xlabel(featurename, fontsize=16)
     plt.ylabel('Density', fontsize=16)
     plt.title('Distribution in Properties vs Train Samples',fontsize=16)
-    name = 'visualze_'+featurename+'.png'
+    name = './images/visualze_'+featurename+'.png'
     plt.savefig(name)
     plt.show()
 
@@ -81,6 +81,42 @@ def Display_missing_percentages(train):
     plt.yticks(range(len(cnt)), list(cnt.keys()))
     plt.xlabel('Percentage of missing values',fontsize=12)
     plt.title('Missing value % for each of feature',fontsize=12)
-    plt.savefig('Missing_values.png')
+    plt.savefig('./images/Missing_values.png')
     plt.show()
     return cnt
+
+
+from sklearn.ensemble import RandomForestRegressor
+def random_forest_importance(df_train):
+     # Build a forest and compute the feature importances
+    forest = RandomForestRegressor(n_estimators=250)
+    y = df_train['logerror'].values.ravel()
+
+    x_try = df_train.columns[:-1]
+    X1 = df_train.drop(['parcelid', 'logerror', 'transactiondate'], axis=1)
+
+    X = X1[X1.columns[:-1]].values
+    forest.fit(X, y)
+    importances = forest.feature_importances_
+    std = np.std([tree.feature_importances_ for tree in forest.estimators_],
+                 axis=0)
+    indices = np.argsort(importances)[::-1]
+    indices = np.flipud(indices)
+
+    # Print the feature ranking
+    print("Feature ranking:")
+    col_names = np.array([])
+    for f in range(X.shape[1]):
+        col_names = np.append(col_names,X1.columns[indices[f]])
+
+    # Plot the feature importances of the forest
+    plt.rcParams.update({'font.size': 7})
+    plt.figure()
+    plt.title("Feature importances")
+    plt.xlabel("Importance")
+    plt.barh(range(X.shape[1]), importances[indices],
+            color="b", yerr=std[indices], align="center")
+    plt.yticks(range(X.shape[1]), col_names)
+    plt.ylim([-1, X.shape[1]])
+    plt.show()
+    plt.savefig('./images/Feature importance.png')

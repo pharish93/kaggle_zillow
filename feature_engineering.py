@@ -1,5 +1,9 @@
-from data_exploration import Display_missing_percentages
+from data_exploration import Display_missing_percentages,random_forest_importance
 from sklearn.preprocessing import LabelEncoder
+import numpy as np
+import matplotlib as plt
+
+from sklearn.ensemble import ExtraTreesClassifier
 
 DEBUG = 1
 def data_preprocessing(df_train,df_test):
@@ -14,6 +18,8 @@ def data_preprocessing(df_train,df_test):
     # df_train['value_prop'] = df_train['structuretaxvaluedollarcnt'] / df_train['landtaxvaluedollarcnt']  # built structure value / value of land
     # df_test['value_prop'] = df_test['structuretaxvaluedollarcnt'] / df_test['landtaxvaluedollarcnt']
     #
+
+    random_forest_importance(df_train)
 
     print('Memory usage reduction...')
     df_train[['latitude', 'longitude']] /= 1e6
@@ -55,35 +61,6 @@ def data_preprocessing(df_train,df_test):
     # random_forest_importance(df_train)
     df_train,df_test=label_encoding(df_train,df_test)
     return df_train,df_test
-
-from sklearn.ensemble import ExtraTreesClassifier
-def random_forest_importance(df_train):
-    # Build a forest and compute the feature importances
-    forest = ExtraTreesClassifier(n_estimators=250,
-                                  random_state=0)
-    y = df_train['logerror']
-    x_try = df_train.columns[:-1]
-    X = df_train.drop(['parcelid', 'logerror', 'transactiondate' ], axis=1)
-    forest.fit(X, y)
-    importances = forest.feature_importances_
-    std = np.std([tree.feature_importances_ for tree in forest.estimators_],
-                 axis=0)
-    indices = np.argsort(importances)[::-1]
-
-    # Print the feature ranking
-    print("Feature ranking:")
-
-    for f in range(X.shape[1]):
-        print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
-
-    # Plot the feature importances of the forest
-    plt.figure()
-    plt.title("Feature importances")
-    plt.bar(range(X.shape[1]), importances[indices],
-            color="r", yerr=std[indices], align="center")
-    plt.xticks(range(X.shape[1]), indices)
-    plt.xlim([-1, X.shape[1]])
-    plt.show()
 
 
 def label_encoding(df_train,df_test):
