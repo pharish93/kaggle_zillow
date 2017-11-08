@@ -26,8 +26,10 @@ DEBUG = 1
 
 
 def main():
-    df_train,df_test = load_full_data()
-    # df_train, df_test = load_small_data()
+
+    # df_train, df_test = load_full_data()
+    # df_train, df_test = load_2016_data()
+    df_train, df_test = load_small_data()
     data_exploration(df_train)
 
     df_train,df_test = data_preprocessing(df_train,df_test)
