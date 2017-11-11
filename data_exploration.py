@@ -67,24 +67,46 @@ def visualize_distribution(properties,df_train,featurename):
     plt.show()
 
 
-def Display_missing_percentages(train):
-    cnt = {}
-    for c in train.columns:
-        k = train[c].isnull().sum()
-        cnt[c] = float(k) / train.shape[0] * 100
+# def Display_missing_percentages_old(train):
+#     cnt = {}
+#     cnt_full = {}
+#     for c in train.columns:
+#         k = train[c].isnull().sum(axis=0)
+#
+#         cnt[c] = (float(k) / train.shape[0]) * 100
+#         cnt_full[c] = float(k)
+#         print c,cnt[c],cnt_full[c], "\n"
+#
+#     sorted_cnt = sorted(cnt.iteritems(), key=lambda (k, v): (v, k))
+#
+#     freq = [k[1] for k in sorted_cnt]
+#
+#     plt.figure(figsize=(22, 18))
+#     plt.barh(range(len(cnt)), freq, align="center")
+#     plt.yticks(range(len(cnt)), list(cnt.keys()))
+#     plt.xlabel('Percentage of missing values',fontsize=12)
+#     plt.title('Missing value % for each of feature',fontsize=12)
+#     plt.savefig('./images/Missing_values.png')
+#     plt.show()
+#     return cnt
 
-    sorted_cnt = sorted(cnt.iteritems(), key=lambda (k, v): (v, k))
-    freq = [k[1] for k in sorted_cnt]
 
-    plt.figure(figsize=(22, 18))
-    plt.barh(range(len(cnt)), freq, align="center")
-    plt.yticks(range(len(cnt)), list(cnt.keys()))
-    plt.xlabel('Percentage of missing values',fontsize=12)
-    plt.title('Missing value % for each of feature',fontsize=12)
+def Display_missing_percentages(prop_df):
+    missing_df = prop_df.isnull().sum(axis=0).reset_index()
+    missing_df.columns = ['column_name', 'missing_count']
+    missing_df = missing_df.ix[missing_df['missing_count']>0]
+    missing_df = missing_df.sort_values(by='missing_count')
+
+    ind = np.arange(missing_df.shape[0])
+    width = 0.9
+    fig, ax = plt.subplots(figsize=(12,18))
+    rects = ax.barh(ind, missing_df.missing_count.values, color='blue')
+    ax.set_yticks(ind)
+    ax.set_yticklabels(missing_df.column_name.values, rotation='horizontal')
+    ax.set_xlabel("Count of missing values")
+    ax.set_title("Number of missing values in each column")
     plt.savefig('./images/Missing_values.png')
     plt.show()
-    return cnt
-
 
 from sklearn.ensemble import RandomForestRegressor
 def random_forest_importance(df_train):
