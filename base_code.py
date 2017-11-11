@@ -23,21 +23,18 @@ sns.set(color_codes=True)
 
 DEBUG = 1
 
-
-
 def main():
 
     # df_train, df_test = load_full_data()
     df_train, df_test = load_2016_data()
     # df_train, df_test = load_small_data()
-    data_exploration(df_train)
+    # data_exploration(df_train)
 
     df_train,df_test = data_preprocessing(df_train,df_test)
-
+    df_train,df_test = new_features(df_train,df_test)
     x_train, y_train, x_test,k = feature_selection(df_train,df_test)
+ 	
     model_experiments(x_train,y_train,x_test)
-
-
 
 if __name__ == "__main__":
     main()

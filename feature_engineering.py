@@ -8,20 +8,6 @@ from sklearn.ensemble import ExtraTreesClassifier
 DEBUG = 1
 def data_preprocessing(df_train,df_test):
 
-    # # living area proportions
-    # df_train['living_area_prop'] = df_train['calculatedfinishedsquarefeet'] / df_train['lotsizesquarefeet']
-    # df_test['living_area_prop'] = df_test['calculatedfinishedsquarefeet'] / df_test['lotsizesquarefeet']
-    # # tax value ratio
-    # df_train['value_ratio'] = df_train['taxvaluedollarcnt'] / df_train['taxamount']
-    # df_test['value_ratio'] = df_test['taxvaluedollarcnt'] / df_test['taxamount']
-    # # tax value proportions
-    # df_train['value_prop'] = df_train['structuretaxvaluedollarcnt'] / df_train['landtaxvaluedollarcnt']  # built structure value / value of land
-    # df_test['value_prop'] = df_test['structuretaxvaluedollarcnt'] / df_test['landtaxvaluedollarcnt']
-    #
-
-    df_train,df_test=label_encoding(df_train,df_test)
-    random_forest_importance(df_train)
-
     print('Memory usage reduction...')
     df_train[['latitude', 'longitude']] /= 1e6
     df_test[['latitude', 'longitude']] /= 1e6
@@ -45,7 +31,7 @@ def data_preprocessing(df_train,df_test):
             drop_list.append(c)
 
     df_train_new = df_train.drop(drop_list,axis=1)
-    drop_list.extend(('201610', '201611','201612', '201710', '201711', '201712'))
+    #drop_list.extend(('201610', '201611','201612', '201710', '201711', '201712'))
     df_test_new = df_test.drop(drop_list,axis=1)
 
 
@@ -57,6 +43,8 @@ def data_preprocessing(df_train,df_test):
         print df_train.shape
         print df_test.shape
 
+    # df_train,df_test=label_encoding(df_train,df_test)
+    # random_forest_importance(df_train)
 
     return df_train,df_test
 
@@ -96,6 +84,22 @@ def label_encoding(df_train,df_test):
 
     return df_train,df_test
 
+def new_features(df_train,df_test):
+     # living area proportions
+    df_train['living_area_prop'] = df_train['calculatedfinishedsquarefeet'] / df_train['lotsizesquarefeet']
+    df_test['living_area_prop'] = df_test['calculatedfinishedsquarefeet'] / df_test['lotsizesquarefeet']
+    # tax value ratio
+    df_train['value_ratio'] = df_train['taxvaluedollarcnt'] / df_train['taxamount']
+    df_test['value_ratio'] = df_test['taxvaluedollarcnt'] / df_test['taxamount']
+    # tax value proportions
+    df_train['value_prop'] = df_train['structuretaxvaluedollarcnt'] / df_train['landtaxvaluedollarcnt']  # built structure value / value of land
+    df_test['value_prop'] = df_test['structuretaxvaluedollarcnt'] / df_test['landtaxvaluedollarcnt']
+
+    df_train['home_age'] = 2016 - df_train['yearbuilt'];
+    df_test['home_age'] = 2016 - df_test['yearbuilt'];
+
+    return df_train, df_test
+
 def feature_selection(df_train,df_test):
 
     ### Rearranging the DataSets ###
@@ -110,11 +114,15 @@ def feature_selection(df_train,df_test):
 
     k = ['basementsqft','bathroomcnt','censustractandblock']
 
-    x_train = df_train.drop(['parcelid', 'logerror', 'transactiondate', 'propertyzoningdesc',
-                             'propertycountylandusecode', ], axis=1)
 
-    x_test = df_test.drop(['parcelid', 'propertyzoningdesc',
-                           'propertycountylandusecode', '201610', '201611',
+    #dropping properties which are not important or which are similar
+
+
+    x_train = df_train.drop(['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7', 
+                            'regionidcounty','threequarterbathnbr', 'assessmentyear','censustractandblock','yearbuilt','regionidneighborhood', ], axis=1)
+
+    x_test = df_test.drop(['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7', 
+                            'regionidcounty','threequarterbathnbr', 'assessmentyear','censustractandblock', 'yearbuilt','regionidneighborhood','201610', '201611',
                            '201612', '201710', '201711', '201712'], axis = 1)
 
     x_train = x_train.values
