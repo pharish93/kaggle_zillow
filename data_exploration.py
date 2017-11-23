@@ -91,8 +91,13 @@ def visualize_distribution(properties,df_train,featurename):
 #     return cnt
 
 
-def Display_missing_percentages(prop_df):
-    missing_df = prop_df.isnull().sum(axis=0).reset_index()
+def Display_missing_percentages(train):
+    cnt = {}
+    for c in train.columns:
+        k = train[c].isnull().sum(axis=0)
+        cnt[c] = (float(k) / train.shape[0]) * 100
+
+    missing_df = train.isnull().sum(axis=0).reset_index()
     missing_df.columns = ['column_name', 'missing_count']
     missing_df = missing_df.ix[missing_df['missing_count']>0]
     missing_df = missing_df.sort_values(by='missing_count')
@@ -107,6 +112,8 @@ def Display_missing_percentages(prop_df):
     ax.set_title("Number of missing values in each column")
     plt.savefig('./images/Missing_values.png')
     plt.show()
+
+    return cnt
 
 from sklearn.ensemble import RandomForestRegressor
 def random_forest_importance(df_train):

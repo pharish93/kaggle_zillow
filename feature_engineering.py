@@ -28,6 +28,7 @@ def data_preprocessing(df_train,df_test):
         if cnt[c] > 90:
             if DEBUG :
                 print c
+                c123 = 0
             drop_list.append(c)
 
     df_train_new = df_train.drop(drop_list,axis=1)
@@ -111,17 +112,13 @@ def feature_selection(df_train,df_test):
     # Make sure to include the same features in the test set as were
     # included in the training set #
 
-
-    k = ['basementsqft','bathroomcnt','censustractandblock']
-
-
     #dropping properties which are not important or which are similar
 
 
-    x_train = df_train.drop(['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7', 
+    x_train = df_train.drop(['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7','calculatedbathnbr',
                             'regionidcounty','threequarterbathnbr', 'assessmentyear','censustractandblock','yearbuilt','regionidneighborhood', ], axis=1)
 
-    x_test = df_test.drop(['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7', 
+    x_test = df_test.drop(['parcelid', 'bathroomcnt', 'fips', 'pooltypeid7','calculatedbathnbr',
                             'regionidcounty','threequarterbathnbr', 'assessmentyear','censustractandblock', 'yearbuilt','regionidneighborhood','201610', '201611',
                            '201612', '201710', '201711', '201712'], axis = 1)
 
