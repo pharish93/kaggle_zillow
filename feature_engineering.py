@@ -99,8 +99,8 @@ def new_features(df_train, df_test):
         'landtaxvaluedollarcnt']  # built structure value / value of land
     df_test['value_prop'] = df_test['structuretaxvaluedollarcnt'] / df_test['landtaxvaluedollarcnt']
 
-    df_train['home_age'] = 2016 - df_train['yearbuilt'];
-    df_test['home_age'] = 2016 - df_test['yearbuilt'];
+    df_train['home_age'] = 2016 - df_train['yearbuilt']
+    df_test['home_age'] = 2016 - df_test['yearbuilt']
 
     return df_train, df_test
 
@@ -120,11 +120,11 @@ def feature_selection(df_train, df_test):
 
     x_train = df_train.drop(
         ['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
-         'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock', 'yearbuilt',
+         'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock', 'yearbuilt','finishedsquarefeet12',
          'regionidneighborhood', ], axis=1)
 
     x_test = df_test.drop(['parcelid', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
-                           'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock',
+                           'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock','finishedsquarefeet12',
                            'yearbuilt', 'regionidneighborhood', '201610', '201611',
                            '201612', '201710', '201711', '201712'], axis=1)
 
