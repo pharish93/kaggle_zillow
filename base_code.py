@@ -25,13 +25,18 @@ DEBUG = 1
 
 def main():
 
+    # Step1 :- Load the data and visualize distributions
     # df_train, df_test = load_full_data()
     df_train, df_test = load_2016_data()
     # df_train, df_test = load_small_data()
+
+    # Step 2 : Data Exploration
     # data_exploration(df_train)
 
-    df_train,df_test = data_preprocessing(df_train,df_test)
-    df_train,df_test = new_features(df_train,df_test)
+    # Step 3 : Feature Understanding and modification
+    df_train,df_test = feature_engineering(df_train,df_test)
+
+
     x_train, y_train, x_test,k = feature_selection(df_train,df_test)
  	
     model_experiments(x_train,y_train,x_test)

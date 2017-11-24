@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.ensemble import RandomForestRegressor
+
 color = sns.color_palette()
 
 def data_exploration(train_df):
@@ -39,7 +41,8 @@ def data_exploration(train_df):
     plt.show()
 
     train_df.drop(['transaction_month'],axis=1)
-    a  =10
+
+
 
 def visualize_distribution(properties,df_train,featurename):
     mean_c = df_train[featurename].mean()
@@ -67,30 +70,6 @@ def visualize_distribution(properties,df_train,featurename):
     plt.show()
 
 
-# def Display_missing_percentages_old(train):
-#     cnt = {}
-#     cnt_full = {}
-#     for c in train.columns:
-#         k = train[c].isnull().sum(axis=0)
-#
-#         cnt[c] = (float(k) / train.shape[0]) * 100
-#         cnt_full[c] = float(k)
-#         print c,cnt[c],cnt_full[c], "\n"
-#
-#     sorted_cnt = sorted(cnt.iteritems(), key=lambda (k, v): (v, k))
-#
-#     freq = [k[1] for k in sorted_cnt]
-#
-#     plt.figure(figsize=(22, 18))
-#     plt.barh(range(len(cnt)), freq, align="center")
-#     plt.yticks(range(len(cnt)), list(cnt.keys()))
-#     plt.xlabel('Percentage of missing values',fontsize=12)
-#     plt.title('Missing value % for each of feature',fontsize=12)
-#     plt.savefig('./images/Missing_values.png')
-#     plt.show()
-#     return cnt
-
-
 def Display_missing_percentages(train):
     cnt = {}
     for c in train.columns:
@@ -115,7 +94,7 @@ def Display_missing_percentages(train):
 
     return cnt
 
-from sklearn.ensemble import RandomForestRegressor
+
 def random_forest_importance(df_train):
      # Build a forest and compute the feature importances
     forest = RandomForestRegressor(n_estimators=250)
