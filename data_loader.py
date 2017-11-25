@@ -132,8 +132,8 @@ def load_2016_data():
     df_train = train.merge(properties, how='left', on='parcelid')
     df_test = test.merge(properties, how='left', on='parcelid')
 
-    visualize_distribution(properties,df_train,'calculatedfinishedsquarefeet')
-    visualize_distribution(properties, df_train, 'structuretaxvaluedollarcnt')
+    # visualize_distribution(properties,df_train,'calculatedfinishedsquarefeet')
+    # visualize_distribution(properties, df_train, 'structuretaxvaluedollarcnt')
 
     if 0:
         # creating a sub sample of data

@@ -1,13 +1,29 @@
 import numpy as np
 import pandas as pd
 import matplotlib as plt
+from geoinfo_analysis import *
 
+def zoningcode2int( df, target ):
+    storenull = df[ target ].isnull()
+    enc = LabelEncoder( )
+    df[ target ] = df[ target ].astype( str )
+
+    print('fit and transform')
+    df[ target ]= enc.fit_transform( df[ target ].values )
+    print( 'num of categories: ', enc.classes_.shape  )
+    df.loc[ storenull, target ] = np.nan
+    print('recover the nan value')
+    return enc
 
 def data_imputation(df_train, df_test):
     # imputing missing values with corresponding data to be filled
 
+    df_train, df_test = impute_floors(df_train, df_test)
+    df_train,df_test = impute_geo_info(df_train,df_test)
+    df_train, df_test = impute_bathroom(df_train, df_test)
+
     mode_imputations = ['airconditioningtypeid', 'heatingorsystemtypeid', 'fireplacecnt', 'garagecarcnt', 'roomcnt',
-                        'bedroomcnt']
+                        'bedroomcnt', 'propertycountylandusecode','propertylandusetypeid']
     for element in mode_imputations:
         mode_element = df_train[element].mode()
         df_test[element] = df_test[element].fillna(mode_element)
@@ -18,8 +34,8 @@ def data_imputation(df_train, df_test):
         df_test[element] = df_test[element].fillna(0)
         df_train[element] = df_train[element].fillna(0)
 
-    df_train, df_test = impute_bathroom(df_train, df_test)
-    mean_imputations = ['fullbathcnt','calculatedfinishedsquarefeet','latitude','longitde']
+
+    mean_imputations = ['fullbathcnt','calculatedfinishedsquarefeet','latitude','longitude','lotsizesquarefeet']
     for element in mean_imputations:
         mean_element = df_train[element].mean()
         df_test[element] = df_test[element].fillna(mean_element)
@@ -31,7 +47,7 @@ def data_imputation(df_train, df_test):
         df_test[element] = df_test[element].fillna(mean_element)
         df_test[element] = df_train[element].fillna(mean_element)
 
-    df_train, df_test = impute_floors(df_train, df_test)
+
 
     return df_train, df_test
 
