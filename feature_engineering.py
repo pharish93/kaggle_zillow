@@ -12,9 +12,11 @@ def feature_engineering(df_train, df_test):
 
     df_train, df_test = data_modification(df_train, df_test)
     df_train, df_test = missing_value_removal(df_train, df_test)
+    df_train, df_test = data_imputation(df_train,df_test)
+
     df_train, df_test = new_features(df_train, df_test)
 
-    df_train, df_test = data_imputation(df_train,df_test)
+
     df_train, df_test = label_encoding(df_train, df_test)
     random_forest_importance(df_train)
 

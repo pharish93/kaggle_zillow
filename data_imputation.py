@@ -18,6 +18,7 @@ def data_imputation(df_train, df_test):
         df_test[element] = df_test[element].fillna(0)
         df_train[element] = df_train[element].fillna(0)
 
+    df_train, df_test = impute_bathroom(df_train, df_test)
     mean_imputations = ['fullbathcnt','calculatedfinishedsquarefeet','latitude','longitde']
     for element in mean_imputations:
         mean_element = df_train[element].mean()
