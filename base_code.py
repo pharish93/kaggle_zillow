@@ -38,7 +38,7 @@ def main():
     df_train,df_test = feature_engineering(df_train,df_test)
 
 
-    x_train, y_train, x_test,k = feature_selection(df_train,df_test)
+    # x_train, y_train, x_test,k = feature_selection(df_train,df_test)
  	
     model_experiments(x_train,y_train,x_test)
 

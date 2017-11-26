@@ -19,7 +19,7 @@ def data_imputation(df_train, df_test):
     # imputing missing values with corresponding data to be filled
 
     df_train, df_test = impute_floors(df_train, df_test)
-    df_train,df_test = impute_geo_info(df_train,df_test)
+    # df_train,df_test = impute_geo_info(df_train,df_test)
     df_train, df_test = impute_bathroom(df_train, df_test)
 
     mode_imputations = ['airconditioningtypeid', 'heatingorsystemtypeid', 'fireplacecnt', 'garagecarcnt', 'roomcnt',

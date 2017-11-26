@@ -64,6 +64,10 @@ def fillna_knn(df, base, target, fraction=1, threshold=10, n_neighbors = 10):
 
 
 def impute_geo_info(df_train,df_test):
+
+    df_train.dropna(axis=0, subset=['latitude', 'longitude'], inplace=True)
+    df_test.dropna(axis=0, subset=['latitude', 'longitude'], inplace=True)
+
     fillna_knn( df = df_train,
                   base = [ 'latitude', 'longitude' ] ,
                   target = 'regionidzip', fraction = 0.1 )

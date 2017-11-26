@@ -128,3 +128,25 @@ def random_forest_importance(df_train):
     plt.ylim([-1, X.shape[1]])
     plt.show()
     plt.savefig('./images/Feature_importance.png')
+
+def remove_outliers(df_train, df_test):
+
+    df_train = df_train.drop(['rawcensustractandblock', ], axis=1)
+    plt.figure(figsize=(12,8))
+    df_train = df_train/df_train.max() #(df_train - df_train.mean()) / (df_train.max() - df_train.min())
+    # sns.boxplot(data=df_train)
+    axes = df_train.boxplot(vert=False,sym='k.')
+    # plt.xticks(rotation=90)
+    # for ax in axes.values():
+    # axes.set_xlim(0.0, 2)
+    plt.show()
+
+    for c in df_train.columns:
+        ulimit = np.nanpercentile(df_train[c], 90)
+        llimit = np.nanpercentile(df_train[c], 1)
+        # print 'ulimit:', ulimit, 'llimit:', llimit
+        df_train[df_train[c]>ulimit] = ulimit
+        df_train[df_train[c]<llimit] = llimit
+        # df_out = df_train.loc[(df_train[c] > llimit) & (df_train[c] < ulimit)]
+
+    return df_train, df_test

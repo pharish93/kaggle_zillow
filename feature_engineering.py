@@ -1,4 +1,4 @@
-from data_exploration import Display_missing_percentages, random_forest_importance
+from data_exploration import Display_missing_percentages, random_forest_importance, remove_outliers
 from sklearn.preprocessing import LabelEncoder
 import numpy as np
 import matplotlib as plt
@@ -15,9 +15,11 @@ def feature_engineering(df_train, df_test):
     df_train, df_test = data_imputation(df_train,df_test)
 
     df_train, df_test = new_features(df_train, df_test)
+    df_train, df_test = feature_selection(df_train, df_test)
 
 
     df_train, df_test = label_encoding(df_train, df_test)
+    df_train, df_test = remove_outliers(df_train,df_test)
     random_forest_importance(df_train)
 
     return df_train, df_test
@@ -126,13 +128,17 @@ def feature_selection(df_train, df_test):
          'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock', 'yearbuilt','finishedsquarefeet12',
          'regionidneighborhood','numberofstories' ], axis=1)
 
+    # x_test = df_test.drop(['parcelid', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
+    #                        'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock','finishedsquarefeet12',
+    #                        'yearbuilt', 'regionidneighborhood', 'numberofstories','201610', '201611',
+    #                        '201612', '201710', '201711', '201712'], axis=1)
+
     x_test = df_test.drop(['parcelid', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
                            'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock','finishedsquarefeet12',
-                           'yearbuilt', 'regionidneighborhood', 'numberofstories','201610', '201611',
-                           '201612', '201710', '201711', '201712'], axis=1)
+                           'yearbuilt', 'regionidneighborhood', 'numberofstories'], axis=1)
 
-    x_train = x_train.values
-    y_train = df_train['logerror'].values
+    # x_train = x_train.values
+    # y_train = df_train['logerror'].values
 
-    y_test = 0
-    return x_train, y_train, x_test, y_test
+
+    return x_train, x_test
