@@ -35,31 +35,32 @@ def fillna_knn(df, base, target, fraction=1, threshold=10, n_neighbors = 10):
     notmiss = ~miss
     nummiss = miss.sum()
 
-    enc = OneHotEncoder()
-    X_target = df.loc[notmiss, whole].sample(frac=fraction)
+    if nummiss != 0:
+        enc = OneHotEncoder()
+        X_target = df.loc[notmiss, whole].sample(frac=fraction)
 
-    enc.fit(X_target[target].unique().reshape((-1, 1)))
+        enc.fit(X_target[target].unique().reshape((-1, 1)))
 
-    Y = enc.transform(X_target[target].values.reshape((-1, 1))).toarray()
-    X = X_target[base]
+        Y = enc.transform(X_target[target].values.reshape((-1, 1))).toarray()
+        X = X_target[base]
 
-    print('fitting')
-    clf = neighbors.KNeighborsClassifier(n_neighbors, weights='uniform')
-    clf.fit(X, Y)
+        print('fitting')
+        clf = neighbors.KNeighborsClassifier(n_neighbors, weights='uniform')
+        clf.fit(X, Y)
 
-    print('the shape of active features: ', enc.active_features_.shape)
+        print('the shape of active features: ', enc.active_features_.shape)
 
-    print('perdicting')
-    Z = clf.predict(df.loc[miss, base])
+        print('perdicting')
+        Z = clf.predict(df.loc[miss, base])
 
-    numunperdicted = Z[:, 0].sum()
-    if numunperdicted / nummiss * 100 < threshold:
-        print('writing result to df')
-        df.loc[miss, target] = np.dot(Z, enc.active_features_)
-        print('num of unperdictable data: ', numunperdicted)
-        return enc
-    else:
-        print('out of threshold: {}% > {}%'.format(numunperdicted / nummiss * 100, threshold))
+        numunperdicted = Z[:, 0].sum()
+        if numunperdicted / nummiss * 100 < threshold:
+            print('writing result to df')
+            df.loc[miss, target] = np.dot(Z, enc.active_features_)
+            print('num of unperdictable data: ', numunperdicted)
+            return enc
+        else:
+            print('out of threshold: {}% > {}%'.format(numunperdicted / nummiss * 100, threshold))
 
 
 def impute_geo_info(df_train,df_test):

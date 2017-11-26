@@ -12,7 +12,7 @@ def feature_engineering(df_train, df_test):
 
     df_train, df_test = data_modification(df_train, df_test)
     df_train, df_test = missing_value_removal(df_train, df_test)
-    # df_train, df_test = data_imputation(df_train,df_test)
+    df_train, df_test = data_imputation(df_train,df_test)
 
     # df_train, df_test = label_encoding(df_train, df_test)
     # random_forest_importance(df_train)
@@ -128,16 +128,16 @@ def feature_selection(df_train, df_test):
     x_train = df_train.drop(
         ['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
          'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock', 'yearbuilt','finishedsquarefeet12',
-         'regionidneighborhood','numberofstories' ], axis=1)
+         'regionidneighborhood','numberofstories' ,'garagetotalsqft'], axis=1)
 
     # x_test = df_test.drop(['parcelid', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
     #                        'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock','finishedsquarefeet12',
-    #                        'yearbuilt', 'regionidneighborhood', 'numberofstories','201610', '201611',
+    #                        'yearbuilt', 'regionidneighborhood', 'numberofstories', 'garagetotalsqft' ,'201610', '201611',
     #                        '201612', '201710', '201711', '201712'], axis=1)
 
     x_test = df_test.drop(['parcelid', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
                            'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock','finishedsquarefeet12',
-                           'yearbuilt', 'regionidneighborhood', 'numberofstories'], axis=1)
+                           'yearbuilt', 'regionidneighborhood', 'numberofstories','garagetotalsqft'], axis=1)
 
     # x_train = x_train.values
     # y_train = df_train['logerror'].values

@@ -19,15 +19,15 @@ def data_imputation(df_train, df_test):
     # imputing missing values with corresponding data to be filled
 
     df_train, df_test = impute_floors(df_train, df_test)
-    # df_train,df_test = impute_geo_info(df_train,df_test)
+    df_train,df_test = impute_geo_info(df_train,df_test)
     df_train, df_test = impute_bathroom(df_train, df_test)
 
     mode_imputations = ['airconditioningtypeid', 'heatingorsystemtypeid', 'fireplacecnt', 'garagecarcnt', 'roomcnt',
                         'bedroomcnt', 'propertycountylandusecode','propertylandusetypeid']
     for element in mode_imputations:
         mode_element = df_train[element].mode()
-        df_test[element] = df_test[element].fillna(mode_element)
-        df_train[element] = df_train[element].fillna(mode_element)
+        df_test[element] = df_test[element].fillna(mode_element[0])
+        df_train[element] = df_train[element].fillna(mode_element[0])
 
     zero_imputations = ['poolcnt']
     for element in zero_imputations:
@@ -39,13 +39,13 @@ def data_imputation(df_train, df_test):
     for element in mean_imputations:
         mean_element = df_train[element].mean()
         df_test[element] = df_test[element].fillna(mean_element)
-        df_test[element] = df_train[element].fillna(mean_element)
+        df_train[element] = df_train[element].fillna(mean_element)
 
     mean_round = ['buildingqualitytypeid', 'taxvaluedollarcnt','structuretaxvaluedollarcnt','landtaxvaluedollarcnt','taxamount']
     for element in mean_round:
         mean_element = round(df_train[element].mean())
         df_test[element] = df_test[element].fillna(mean_element)
-        df_test[element] = df_train[element].fillna(mean_element)
+        df_train[element] = df_train[element].fillna(mean_element)
 
 
 
