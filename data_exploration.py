@@ -133,13 +133,11 @@ def remove_outliers(df_train, df_test):
 
     df_train = df_train.drop(['rawcensustractandblock', ], axis=1)
     plt.figure(figsize=(12,8))
+    plt.title("Outlier detection using boxplot")
     df_train = df_train/df_train.max() #(df_train - df_train.mean()) / (df_train.max() - df_train.min())
-    # sns.boxplot(data=df_train)
     axes = df_train.boxplot(vert=False,sym='k.')
-    # plt.xticks(rotation=90)
-    # for ax in axes.values():
-    # axes.set_xlim(0.0, 2)
     plt.show()
+    plt.savefig('./images/Outlier_detection.png')
 
     for c in df_train.columns:
         ulimit = np.nanpercentile(df_train[c], 90)

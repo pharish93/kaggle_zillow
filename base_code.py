@@ -32,7 +32,7 @@ def main():
     df_train,df_test = load_train_split_test()
 
     # Step 2 : Data Exploration
-    # data_exploration(df_train)
+    data_exploration(df_train)
 
     # Step 3 : Feature Understanding and modification
     df_train,df_test = feature_engineering(df_train,df_test)

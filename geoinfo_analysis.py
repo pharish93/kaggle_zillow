@@ -4,7 +4,6 @@ import gc
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
 import seaborn as sns
-from mpl_toolkits.basemap import Basemap, cm
 
 sns.set(font_scale=1.5)
 
