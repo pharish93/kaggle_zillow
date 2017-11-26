@@ -3,6 +3,71 @@ import numpy as np
 import gc
 
 from data_exploration import visualize_distribution
+from sklearn.model_selection import train_test_split
+
+def load_train_split_test():
+    # Load the Datasets #
+    # We need to load the datasets that will be needed to train our machine learning algorithms,
+    #  handle our data and make predictions.
+    # Note that these datasets are the ones that are already provided once you enter the
+    # competition by accepting terms and conditions
+
+    train_2016 = pd.read_csv('./data/train_2016_v2.csv', parse_dates=["transactiondate"])
+    properties_2016 = pd.read_csv('./data/properties_2016.csv')
+
+    train_2017 = pd.read_csv('./data/train_2017.csv', parse_dates=["transactiondate"])
+    properties_2017 = pd.read_csv('./data/properties_2017.csv')
+
+    train_temp = [train_2016, train_2017]
+    properties_temp = [properties_2016, properties_2017]
+    train = pd.concat(train_temp)
+    properties = pd.concat(properties_temp)
+
+    # Analyse the Dimensions of our Datasets.
+    print("Training Size:" + str(train.shape))
+    print("Property Size:" + str(properties.shape))
+
+    # Type Converting the DataSet
+    # The processing of some of the algorithms can be made quick if data
+    # representation is made in int/float32 instead of int/float64.
+    # Therefore, in order to make sure that all of our columns types are in
+    # float32, we are implementing the following lines of code #
+
+
+    for c, dtype in zip(properties.columns, properties.dtypes):
+        if dtype == np.float64:
+            properties[c] = properties[c].astype(np.float32)
+        if dtype == np.int64:
+            properties[c] = properties[c].astype(np.int32)
+
+    for column in train.columns:
+        if train[column].dtype == int:
+            train[column] = train[column].astype(np.int32)
+        if train[column].dtype == float:
+            train[column] = train[column].astype(np.float32)
+
+    ###Merging the Datasets ###
+    # We are merging the properties dataset with training and testing dataset for
+    #  model building and testing prediction #
+
+    # train_merged = train.merge(properties, how='left', on='parcelid')
+    train_merged = train.merge(properties.drop_duplicates('parcelid'), how='left')
+
+    ## Splitting the data into train test - 70 % train , 30 % test
+
+    df_train, df_test = train_test_split(train_merged, test_size = 0.30, random_state = 42)
+
+    # visualize_distribution(properties,df_train,'calculatedfinishedsquarefeet')
+    # visualize_distribution(properties,df_test,'calculatedfinishedsquarefeet')
+    #
+    # visualize_distribution(properties, df_train, 'structuretaxvaluedollarcnt')
+    # visualize_distribution(properties, df_test, 'structuretaxvaluedollarcnt')
+
+    ### Remove previous variables to keep some memory
+    del properties, train,train_merged
+    gc.collect()
+
+    return df_train, df_test
 
 def load_full_data():
 
@@ -57,8 +122,8 @@ def load_full_data():
     ###Merging the Datasets ###
     # We are merging the properties dataset with training and testing dataset for model building and testing prediction #
 
-    df_train = train.merge(properties, how='left', on='parcelid')
-    df_test = test.merge(properties, how='left', on='parcelid')
+    df_train = train.merge(properties.drop_duplicates('parcelid'), how='left')
+    df_test = test.merge(properties.drop_duplicates('parcelid'), how='left')
 
     visualize_distribution(properties,df_train,'calculatedfinishedsquarefeet')
     visualize_distribution(properties, df_train, 'structuretaxvaluedollarcnt')

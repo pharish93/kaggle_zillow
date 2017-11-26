@@ -27,8 +27,9 @@ def main():
 
     # Step1 :- Load the data and visualize distributions
     # df_train, df_test = load_full_data()
-    df_train, df_test = load_2016_data()
+    # df_train, df_test = load_2016_data()
     # df_train, df_test = load_small_data()
+    df_train,df_test = load_train_split_test()
 
     # Step 2 : Data Exploration
     # data_exploration(df_train)
