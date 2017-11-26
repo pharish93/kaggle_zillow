@@ -32,15 +32,12 @@ def main():
     df_train,df_test = load_train_split_test()
 
     # Step 2 : Data Exploration
-    data_exploration(df_train)
+    # data_exploration(df_train)
 
     # Step 3 : Feature Understanding and modification
-    df_train,df_test = feature_engineering(df_train,df_test)
-
-
-    # x_train, y_train, x_test,k = feature_selection(df_train,df_test)
+    x_train,x_test,y_train,y_test = feature_engineering(df_train,df_test)
  	
-    model_experiments(x_train,y_train,x_test)
+    model_experiments(x_train,y_train,x_test,y_test)
 
 if __name__ == "__main__":
     main()

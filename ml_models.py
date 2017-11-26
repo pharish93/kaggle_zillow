@@ -1,7 +1,7 @@
 import xgboost as xgb
 import pandas as pd
 
-def model_experiments(x_train,y_train,x_test):
+def model_experiments(x_train,y_train,x_test,y_test):
     ### Cross Validation ###
 
     # We are dividing our datasets into the training and validation sets so that
@@ -11,10 +11,10 @@ def model_experiments(x_train,y_train,x_test):
 
     from sklearn.model_selection import train_test_split
 
-    X = x_train
-    y = y_train
+    Xtrain = x_train
+    ytrain = y_train
 
-    Xtrain, Xvalid, ytrain, yvalid = train_test_split(X, y, test_size=0.2, random_state=42)
+    # Xtrain, Xvalid, ytrain, yvalid = train_test_split(X, y, test_size=0.2, random_state=42)
 
     #Implement the Xgboost#
 
@@ -23,15 +23,16 @@ def model_experiments(x_train,y_train,x_test):
     # can be found on the following link http://xgboost.readthedocs.io/en/latest/parameter.html #
 
     dtrain = xgb.DMatrix(Xtrain, label=ytrain)
-    dvalid = xgb.DMatrix(Xvalid, label=yvalid)
-    dtest = xgb.DMatrix(x_test.values)
+    # dvalid = xgb.DMatrix(Xvalid, label=yvalid)
+    dtest = xgb.DMatrix(x_test)
 
     # Try different parameters!
     xgb_params = {'min_child_weight': 5, 'eta': 0.035, 'colsample_bytree': 0.5, 'max_depth': 4,
                 'subsample': 0.85, 'lambda': 0.8, 'nthread': -1, 'booster' : 'gbtree', 'silent': 1, 'gamma' : 0,
                 'eval_metric': 'mae', 'objective': 'reg:linear' }
 
-    watchlist = [(dtrain, 'train'), (dvalid, 'valid')]
+    # watchlist = [(dtrain, 'train'), (dvalid, 'valid')]
+    watchlist = [(dtrain, 'train')]
 
     model_xgb = xgb.train(xgb_params, dtrain, 1000, watchlist, early_stopping_rounds=100,
                       maximize=False, verbose_eval=10)

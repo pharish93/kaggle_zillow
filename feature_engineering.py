@@ -18,13 +18,13 @@ def feature_engineering(df_train, df_test):
     # random_forest_importance(df_train)
 
     df_train, df_test = new_features(df_train, df_test)
-    df_train, df_test = feature_selection(df_train, df_test)
+    df_xtrain, df_xtest, df_ytrain, df_ytest = feature_selection(df_train, df_test)
 
-    df_train, df_test = label_encoding(df_train, df_test)
-    df_train, df_test = remove_outliers(df_train,df_test)
+    df_xtrain, df_xtest = label_encoding(df_xtrain, df_xtest)
+    df_xtrain, df_xtest = remove_outliers(df_xtrain, df_xtest)
     
 
-    return df_train, df_test
+    return df_xtrain, df_xtest, df_ytrain, df_ytest
 
 
 def data_modification(df_train, df_test):
@@ -124,7 +124,8 @@ def feature_selection(df_train, df_test):
 
     # dropping properties which are not important or which are similar
 
-
+    y_train = df_train['logerror']
+    y_test = df_test['logerror']
     x_train = df_train.drop(
         ['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
          'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock', 'yearbuilt','finishedsquarefeet12',
@@ -135,12 +136,10 @@ def feature_selection(df_train, df_test):
     #                        'yearbuilt', 'regionidneighborhood', 'numberofstories', 'garagetotalsqft' ,'201610', '201611',
     #                        '201612', '201710', '201711', '201712'], axis=1)
 
-    x_test = df_test.drop(['parcelid', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
+    x_test = df_test.drop(['parcelid', 'logerror','bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
                            'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock','finishedsquarefeet12',
                            'yearbuilt', 'regionidneighborhood', 'numberofstories','garagetotalsqft'], axis=1)
 
     # x_train = x_train.values
-    # y_train = df_train['logerror'].values
 
-
-    return x_train, x_test
+    return x_train, x_test, y_train, y_test
