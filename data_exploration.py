@@ -116,7 +116,7 @@ def random_forest_importance(df_train):
     col_names = np.array([])
     for f in range(X.shape[1]):
         col_names = np.append(col_names,X1.columns[indices[f]])
-
+        
     # Plot the feature importances of the forest
     plt.rcParams.update({'font.size': 7})
     plt.figure()
@@ -131,7 +131,7 @@ def random_forest_importance(df_train):
 
 def remove_outliers(df_train, df_test):
 
-    df_train = df_train.drop(['rawcensustractandblock', ], axis=1)
+    # df_train = df_train.drop(['rawcensustractandblock', ], axis=1)
     plt.figure(figsize=(12,8))
     plt.title("Outlier detection using boxplot")
     df_train = df_train/df_train.max() #(df_train - df_train.mean()) / (df_train.max() - df_train.min())

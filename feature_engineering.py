@@ -51,7 +51,7 @@ def missing_value_removal(df_train, df_test):
     for c in df_train.columns:
         if cnt[c] > 90:
             if DEBUG:
-                print c
+                # print c
                 c123 = 0
             drop_list.append(c)
 
@@ -136,9 +136,10 @@ def feature_selection(df_train, df_test):
     #                        'yearbuilt', 'regionidneighborhood', 'numberofstories', 'garagetotalsqft' ,'201610', '201611',
     #                        '201612', '201710', '201711', '201712'], axis=1)
 
-    x_test = df_test.drop(['parcelid', 'logerror','bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
-                           'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock','finishedsquarefeet12',
-                           'yearbuilt', 'regionidneighborhood', 'numberofstories','garagetotalsqft'], axis=1)
+    x_test = df_test.drop(
+        ['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
+         'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock', 'yearbuilt','finishedsquarefeet12',
+         'regionidneighborhood','numberofstories' ,'garagetotalsqft'], axis=1)
 
     # x_train = x_train.values
 

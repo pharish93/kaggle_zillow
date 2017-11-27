@@ -37,7 +37,8 @@ def main():
     # Step 3 : Feature Understanding and modification
     x_train,x_test,y_train,y_test = feature_engineering(df_train,df_test)
  	
-    model_experiments(x_train,y_train,x_test,y_test)
+    y_pred = model_experiments(x_train,y_train,x_test)
+    calculate_r_squared(y_test.values, y_pred)
 
 if __name__ == "__main__":
     main()
