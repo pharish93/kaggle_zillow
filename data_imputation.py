@@ -53,56 +53,59 @@ def data_imputation(df_train, df_test):
 
 
 def impute_bathroom(df_train, df_test):
-    loc = df_train['fullbathcnt'].index[df_train['fullbathcnt'].apply(np.isnan)]
-    df_train['fullbathcnt'][loc] = df_train['bathroomcnt'][loc]
+    loc_1 = df_train['fullbathcnt'].index[df_train['fullbathcnt'].apply(np.isnan)]
+    df_train.loc[loc_1,'fullbathcnt'] = df_train.loc[loc_1,'bathroomcnt']
+
+    loc_2 = df_test['fullbathcnt'].index[df_test['fullbathcnt'].apply(np.isnan)]
+    df_test.loc[loc_2,'fullbathcnt'] = df_test.loc[loc_2,'bathroomcnt']
 
     return df_train, df_test
 
 
 def impute_floors(df_train, df_test):
     # Room imputations
-    loc = df_train['unitcnt'].index[df_train['unitcnt'].apply(np.isnan)]
-    df_train['unitcnt'][loc] = df_train['numberofstories'][loc]
-    loc = df_test['unitcnt'].index[df_test['unitcnt'].apply(np.isnan)]
-    df_test['unitcnt'][loc] = df_test['numberofstories'][loc]
+    loc_1 = df_train['unitcnt'].index[df_train['unitcnt'].apply(np.isnan)]
+    df_train.loc[loc_1,'unitcnt'] = df_train.loc[loc_1,'numberofstories']
+    loc_2 = df_test['unitcnt'].index[df_test['unitcnt'].apply(np.isnan)]
+    df_test.loc[loc_2,'unitcnt']= df_test.loc[loc_2,'numberofstories']
 
     # Train
     loc = df_train['unitcnt'].index[df_train['unitcnt'].apply(np.isnan)].tolist()
     list_intersect = df_train.index[df_train['propertylandusetypeid'] == 246].tolist()
     common1 = list(set(loc).intersection(list_intersect))
-    df_train['unitcnt'][common1] = 2
+    df_train.loc[common1,'unitcnt'] = 2
 
     loc = df_train['unitcnt'].index[df_train['unitcnt'].apply(np.isnan)].tolist()
     list_intersect = df_train.index[df_train['propertylandusetypeid'] == 247].tolist()
     common1 = list(set(loc).intersection(list_intersect))
-    df_train['unitcnt'][common1] = 3
+    df_train.loc[common1, 'unitcnt'] = 3
 
     loc = df_train['unitcnt'].index[df_train['unitcnt'].apply(np.isnan)].tolist()
     list_intersect = df_train.index[df_train['propertylandusetypeid'] == 248].tolist()
     common1 = list(set(loc).intersection(list_intersect))
-    df_train['unitcnt'][common1] = 4
-    loc = df_train['unitcnt'].index[df_train['unitcnt'].apply(np.isnan)]
+    df_train.loc[common1, 'unitcnt'] = 4
+    loc_1 = df_train['unitcnt'].index[df_train['unitcnt'].apply(np.isnan)]
 
-    df_train['unitcnt'][loc] = 1
+    df_train.loc[loc_1, 'unitcnt'] = 1
 
     # Test
     loc = df_test['unitcnt'].index[df_test['unitcnt'].apply(np.isnan)].tolist()
     list_intersect = df_test.index[df_test['propertylandusetypeid'] == 246].tolist()
     common1 = list(set(loc).intersection(list_intersect))
-    df_test['unitcnt'][common1] = 2
+    df_test.loc[common1, 'unitcnt']  = 2
 
     loc = df_test['unitcnt'].index[df_test['unitcnt'].apply(np.isnan)].tolist()
     list_intersect = df_test.index[df_test['propertylandusetypeid'] == 247].tolist()
     common1 = list(set(loc).intersection(list_intersect))
-    df_test['unitcnt'][common1] = 3
+    df_test.loc[common1, 'unitcnt']  = 3
 
     loc = df_test['unitcnt'].index[df_test['unitcnt'].apply(np.isnan)].tolist()
     list_intersect = df_test.index[df_test['propertylandusetypeid'] == 248].tolist()
     common1 = list(set(loc).intersection(list_intersect))
-    df_test['unitcnt'][common1] = 4
+    df_test.loc[common1, 'unitcnt']  = 4
 
-    loc = df_test['unitcnt'].index[df_test['unitcnt'].apply(np.isnan)]
+    loc_1 = df_test['unitcnt'].index[df_test['unitcnt'].apply(np.isnan)]
 
-    df_test['unitcnt'][loc] = 1
+    df_test.loc[loc_1, 'unitcnt']  = 1
 
     return df_train, df_test

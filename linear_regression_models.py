@@ -24,10 +24,10 @@ def linear_reg_model(x_train,y_train,x_test):
 
     lr.fit(X, y)
 
-    Predicted_test_xgb = lr.predict(x_test.values)
+    Predicted_test = lr.predict(x_test.values)
 
     print "Linear Regression Modeling Function Completed"
 
-    return Predicted_test_xgb
+    return Predicted_test
 
 
