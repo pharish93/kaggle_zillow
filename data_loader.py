@@ -12,6 +12,7 @@ def load_train_split_test():
     # Note that these datasets are the ones that are already provided once you enter the
     # competition by accepting terms and conditions
 
+    print "Load Data Entered"
     train_2016 = pd.read_csv('./data/train_2016_v2.csv', parse_dates=["transactiondate"])
     properties_2016 = pd.read_csv('./data/properties_2016.csv')
 
@@ -67,6 +68,7 @@ def load_train_split_test():
     del properties, train,train_merged
     gc.collect()
 
+    print "Load Data Completed"
     return df_train, df_test
 
 def load_full_data():

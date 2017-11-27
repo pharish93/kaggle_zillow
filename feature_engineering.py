@@ -10,6 +10,8 @@ DEBUG = 1
 
 def feature_engineering(df_train, df_test):
 
+    print "Feature Engineering entered"
+
     df_train, df_test = data_modification(df_train, df_test)
     df_train, df_test = missing_value_removal(df_train, df_test)
     df_train, df_test = data_imputation(df_train,df_test)
@@ -23,7 +25,7 @@ def feature_engineering(df_train, df_test):
     df_xtrain, df_xtest = label_encoding(df_xtrain, df_xtest)
     df_xtrain, df_xtest = remove_outliers(df_xtrain, df_xtest)
     
-
+    print "Feature Engineering Completed"
     return df_xtrain, df_xtest, df_ytrain, df_ytest
 
 
@@ -40,6 +42,7 @@ def data_modification(df_train, df_test):
 
 def missing_value_removal(df_train, df_test):
     # counting number of missing values
+    print "Missing Values Removal function ..."
     cnt = Display_missing_percentages(df_train)
 
     if DEBUG:

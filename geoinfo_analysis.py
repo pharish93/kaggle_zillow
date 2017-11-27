@@ -20,11 +20,11 @@ def zoningcode2int( df, target ):
     enc = LabelEncoder( )
     df[ target ] = df[ target ].astype( str )
 
-    print('fit and transform')
+    # print('fit and transform')
     df[ target ]= enc.fit_transform( df[ target ].values )
-    print( 'num of categories: ', enc.classes_.shape  )
+    # print( 'num of categories: ', enc.classes_.shape  )
     df.loc[ storenull, target ] = np.nan
-    print('recover the nan value')
+    # print('recover the nan value')
     return enc
 
 def fillna_knn(df, base, target, fraction=1, threshold=10, n_neighbors = 10):
@@ -44,24 +44,24 @@ def fillna_knn(df, base, target, fraction=1, threshold=10, n_neighbors = 10):
         Y = enc.transform(X_target[target].values.reshape((-1, 1))).toarray()
         X = X_target[base]
 
-        print('fitting')
+        # print('fitting')
         clf = neighbors.KNeighborsClassifier(n_neighbors, weights='uniform')
         clf.fit(X, Y)
 
-        print('the shape of active features: ', enc.active_features_.shape)
+        # print('the shape of active features: ', enc.active_features_.shape)
 
-        print('perdicting')
+        # print('perdicting')
         Z = clf.predict(df.loc[miss, base])
 
         numunperdicted = Z[:, 0].sum()
         if numunperdicted / nummiss * 100 < threshold:
-            print('writing result to df')
+            # print('writing result to df')
             df.loc[miss, target] = np.dot(Z, enc.active_features_)
-            print('num of unperdictable data: ', numunperdicted)
+            # print('num of unperdictable data: ', numunperdicted)
             return enc
         else:
-            print('out of threshold: {}% > {}%'.format(numunperdicted / nummiss * 100, threshold))
-
+            # print('out of threshold: {}% > {}%'.format(numunperdicted / nummiss * 100, threshold))
+            th = 0
 
 def impute_geo_info(df_train,df_test):
 

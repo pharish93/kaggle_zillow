@@ -3,7 +3,7 @@ import xgboost as xgb
 import pandas as pd
 from sklearn.metrics import r2_score
 
-def model_experiments(x_train,y_train,x_test):
+def xgb_model_experiments(x_train,y_train,x_test):
     ### Cross Validation ###
 
     # We are dividing our datasets into the training and validation sets so that

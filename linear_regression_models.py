@@ -2,6 +2,10 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_predict
+from sklearn import linear_model
+import matplotlib.pyplot as plt
+
 
 def linear_reg_model(x_train,y_train,x_test):
     ### Cross Validation ###
@@ -11,14 +15,18 @@ def linear_reg_model(x_train,y_train,x_test):
     # This would let us know when our model might be over or under fitting on the
     # dataset that we have employed. #
 
+    print "Linear Regression Modeling Function entered"
+
     X = x_train.values
     y = y_train.values
 
-    Xtrain, Xvalid, ytrain, yvalid = train_test_split(X, y, test_size=0.2, random_state=42)
+    lr = linear_model.LinearRegression()
 
+    lr.fit(X, y)
 
+    Predicted_test_xgb = lr.predict(x_test.values)
 
-    Predicted_test_xgb = 0
+    print "Linear Regression Modeling Function Completed"
 
     return Predicted_test_xgb
 

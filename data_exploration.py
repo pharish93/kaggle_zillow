@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.ensemble import RandomForestRegressor
 
+DEBUG = 0
 color = sns.color_palette()
 
 def data_exploration(train_df):
@@ -81,16 +82,17 @@ def Display_missing_percentages(train):
     missing_df = missing_df.ix[missing_df['missing_count']>0]
     missing_df = missing_df.sort_values(by='missing_count')
 
-    ind = np.arange(missing_df.shape[0])
-    width = 0.9
-    fig, ax = plt.subplots(figsize=(12,18))
-    rects = ax.barh(ind, missing_df.missing_count.values, color='blue')
-    ax.set_yticks(ind)
-    ax.set_yticklabels(missing_df.column_name.values, rotation='horizontal')
-    ax.set_xlabel("Count of missing values")
-    ax.set_title("Number of missing values in each column")
-    plt.savefig('./images/Missing_values.png')
-    plt.show()
+    if DEBUG :
+        ind = np.arange(missing_df.shape[0])
+        width = 0.9
+        fig, ax = plt.subplots(figsize=(12,18))
+        rects = ax.barh(ind, missing_df.missing_count.values, color='blue')
+        ax.set_yticks(ind)
+        ax.set_yticklabels(missing_df.column_name.values, rotation='horizontal')
+        ax.set_xlabel("Count of missing values")
+        ax.set_title("Number of missing values in each column")
+        plt.savefig('./images/Missing_values.png')
+        plt.show()
 
     return cnt
 

@@ -13,12 +13,13 @@ import pandas as pd
 from data_exploration import *
 from data_loader import *
 from feature_engineering import *
-from ml_models import *
+from xgb_models import *
+from linear_regression_models import *
 from testing_metric import *
 
 sns.set(color_codes=True)
 
-DEBUG = 1
+DEBUG = 0
 
 def main():
 
@@ -29,13 +30,19 @@ def main():
     df_train, df_test = load_train_split_test()
 
     # Step 2 : Data Exploration
-    # data_exploration(df_train)
+    if DEBUG:
+        data_exploration(df_train)
 
     # Step 3 : Feature Understanding and modification
     x_train,x_test,y_train,y_test = feature_engineering(df_train,df_test)
- 	
-    y_pred = model_experiments(x_train,y_train,x_test)
-    calculate_r_squared(y_test.values, y_pred)
+
+    # Step 4  : Sending data to Machine Learning Model
+    y_pred = xgb_model_experiments(x_train,y_train,x_test)
+
+    # y_pred = linear_reg_model(x_train, y_train, x_test)
+
+    # Step 5 : Testing Error Metrices
+    error_metric_calc(y_test.values, y_pred)
 
 if __name__ == "__main__":
     main()
