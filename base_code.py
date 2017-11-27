@@ -9,15 +9,12 @@
 # Importing Libraries or Packages that are needed throughout the Program
 import numpy as np
 import pandas as pd
-import xgboost as  xgb
-
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 from data_exploration import *
 from data_loader import *
 from feature_engineering import *
 from ml_models import *
+from testing_metric import *
 
 sns.set(color_codes=True)
 
@@ -29,7 +26,7 @@ def main():
     # df_train, df_test = load_full_data()
     # df_train, df_test = load_2016_data()
     # df_train, df_test = load_small_data()
-    df_train,df_test = load_train_split_test()
+    df_train, df_test = load_train_split_test()
 
     # Step 2 : Data Exploration
     # data_exploration(df_train)

@@ -140,7 +140,6 @@ def feature_selection(df_train, df_test):
         ['parcelid', 'logerror', 'transactiondate', 'bathroomcnt', 'fips', 'pooltypeid7', 'calculatedbathnbr',
          'regionidcounty', 'threequarterbathnbr', 'assessmentyear', 'censustractandblock', 'yearbuilt','finishedsquarefeet12',
          'regionidneighborhood','numberofstories' ,'garagetotalsqft'], axis=1)
-
     # x_train = x_train.values
 
     return x_train, x_test, y_train, y_test
