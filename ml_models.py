@@ -1,8 +1,10 @@
 import numpy as np
 import xgboost as xgb
 import pandas as pd
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error
 
-def xgb_model_experiments(x_train,y_train,x_test):
+def model_experiments(x_train,y_train,x_test):
     ### Cross Validation ###
 
     # We are dividing our datasets into the training and validation sets so that
@@ -28,13 +30,13 @@ def xgb_model_experiments(x_train,y_train,x_test):
     dtest = xgb.DMatrix(x_test.values)
 
     # Try different parameters!
-    xgb_params = {'min_child_weight': 5, 'eta': 0.0475, 'colsample_bytree': 0.5, 'max_depth': 4,
+    xgb_params = {'min_child_weight': 5, 'eta': 0.035, 'colsample_bytree': 0.5, 'max_depth': 8,
                 'subsample': 0.85, 'lambda': 0.8, 'nthread': -1, 'booster' : 'gbtree', 'silent': 1, 'gamma' : 0,
                 'eval_metric': 'mae', 'objective': 'reg:linear' }
 
     watchlist = [(dtrain, 'train'), (dvalid, 'valid')]
 
-    model_xgb = xgb.train(xgb_params, dtrain, 1000, watchlist, early_stopping_rounds=100,
+    model_xgb = xgb.train(xgb_params, dtrain, 10000, watchlist, early_stopping_rounds=100,
                       maximize=False, verbose_eval=10)
 
     # Predicting the results
@@ -60,6 +62,4 @@ def xgb_model_experiments(x_train,y_train,x_test):
     # print("Finished writing the file")
 
     # return predicted values
-
-
 

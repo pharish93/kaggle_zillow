@@ -40,12 +40,10 @@ def linear_reg_model(x_train,y_train,x_test):
 
 def random_forest_reg(x_train,y_train,x_test):
 
-
     print "Random Forest Regressor "
 
     X = x_train.values
     y = y_train.values
-
 
     regr = RandomForestRegressor(n_estimators=250)
     regr.fit(X, y)
