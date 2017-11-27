@@ -149,4 +149,7 @@ def remove_outliers(df_train, df_test):
         df_train[df_train[c]<llimit] = llimit
         # df_out = df_train.loc[(df_train[c] > llimit) & (df_train[c] < ulimit)]
 
+        df_test[df_test[c]>ulimit] = ulimit
+        df_test[df_test[c]<llimit] = llimit
+
     return df_train, df_test

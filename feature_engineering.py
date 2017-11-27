@@ -53,9 +53,9 @@ def missing_value_removal(df_train, df_test):
     drop_list = []
     for c in df_train.columns:
         if cnt[c] > 90:
-            if DEBUG:
-                # print c
-                c123 = 0
+            if 0:
+            # if DEBUG:
+                print c
             drop_list.append(c)
 
     df_train_new = df_train.drop(drop_list, axis=1)
@@ -85,11 +85,13 @@ def label_encoding(df_train, df_test):
 
     lbl = LabelEncoder()
     for c in df_train.columns:
+        # df_train[c] = df_train[c].fillna(0)
         if df_train[c].dtype == 'object':
             lbl.fit(list(df_train[c].values))
             df_train[c] = lbl.transform(list(df_train[c].values))
 
     for c in df_test.columns:
+        # df_test[c] = df_test[c].fillna(0)
         if df_test[c].dtype == 'object':
             lbl.fit(list(df_test[c].values))
             df_test[c] = lbl.transform(list(df_test[c].values))

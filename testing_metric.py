@@ -13,10 +13,10 @@ def calculate_r_squared(y_true, y_pred):
     rss = np.sum((y_true - y_pred) ** 2)
     tss = np.sum((y_true - y_true.mean()) ** 2)
     score = rss/tss
-    print score
+    print "R Score : ", score
 
 def mean_abs_error(y_true, y_pred):
 
     score = mean_absolute_error(y_true, y_pred)
 
-    print score
+    print "Mean Absolute Error",  score
