@@ -12,7 +12,7 @@ from sklearn.datasets import make_regression
 
 def pca_data(x_train,x_test):
 
-    pca = decomposition.PCA(n_components=3)
+    pca = decomposition.PCA(n_components=5)
 
     pca.fit(x_train)
     x_train = pca.transform(x_train)
@@ -27,9 +27,13 @@ def linear_reg_model(x_train,y_train,x_test):
     x_train_vals = x_train.values
     y = y_train.values
 
-    X,x_test_vals = pca_data(x_train_vals,x_test.values)
+    # X,x_test_vals = pca_data(x_train_vals,x_test.values)
+    X = x_train_vals
+    x_test_vals = x_test.values
 
-    lr = linear_model.Ridge (alpha = .5)
+    alphas = np.logspace(-3, -0.1, 30)
+    lr = linear_model.LassoCV(alphas=alphas,random_state=0,verbose=True,cv=5)
+    # lr = linear_model.Lasso(alpha=.5)
     lr.fit(X, y)
 
     Predicted_test = lr.predict(x_test_vals)

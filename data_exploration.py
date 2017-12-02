@@ -71,6 +71,22 @@ def visualize_distribution(properties,df_train,featurename):
     plt.show()
 
 
+def visualize_error_vs_property(train_df):
+    col = "taxamount"
+    ulimit = np.percentile(train_df[col].values, 99.5)
+    llimit = np.percentile(train_df[col].values, 0.5)
+    train_df[col].ix[train_df[col] > ulimit] = ulimit
+    train_df[col].ix[train_df[col] < llimit] = llimit
+
+    plt.figure(figsize=(12, 12))
+    sns.jointplot(x=train_df.taxamount.values, y=train_df.logerror.values, size=10, color=color[5])
+    plt.ylabel('Log Error', fontsize=16)
+    plt.xlabel('Tax Amount', fontsize=16)
+    plt.title("Tax Vs Log error", fontsize=15)
+    name = './images/visualze_calfinished.png'
+    plt.savefig(name)
+    plt.show()
+
 def Display_missing_percentages(train):
     cnt = {}
     for c in train.columns:

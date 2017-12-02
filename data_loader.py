@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import gc
 
-from data_exploration import visualize_distribution
+from data_exploration import *
 from sklearn.model_selection import train_test_split
 
 def load_train_split_test():
@@ -56,6 +56,7 @@ def load_train_split_test():
 
     ## Splitting the data into train test - 70 % train , 30 % test
 
+
     df_train, df_test = train_test_split(train_merged, test_size = 0.30, random_state = 42)
 
     # visualize_distribution(properties,df_train,'calculatedfinishedsquarefeet')
@@ -67,6 +68,7 @@ def load_train_split_test():
     ### Remove previous variables to keep some memory
     del properties, train,train_merged
     gc.collect()
+
 
     print "Load Data Completed"
     return df_train, df_test
