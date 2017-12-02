@@ -154,8 +154,8 @@ def remove_outliers(df_train, df_test):
     plt.title("Outlier detection using boxplot")
     df_train = df_train/df_train.max() #(df_train - df_train.mean()) / (df_train.max() - df_train.min())
     axes = df_train.boxplot(vert=False,sym='k.')
-    plt.show()
     plt.savefig('./images/Outlier_detection.png')
+    plt.show()
 
     for c in df_train.columns:
         ulimit = np.nanpercentile(df_train[c], 90)
