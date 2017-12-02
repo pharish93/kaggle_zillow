@@ -5,12 +5,12 @@ import gc
 from data_exploration import *
 from sklearn.model_selection import train_test_split
 
+
+
 def load_train_split_test():
     # Load the Datasets #
     # We need to load the datasets that will be needed to train our machine learning algorithms,
     #  handle our data and make predictions.
-    # Note that these datasets are the ones that are already provided once you enter the
-    # competition by accepting terms and conditions
 
     print "Load Data Entered"
     train_2016 = pd.read_csv('./data/train_2016_v2.csv', parse_dates=["transactiondate"])
@@ -59,11 +59,12 @@ def load_train_split_test():
 
     df_train, df_test = train_test_split(train_merged, test_size = 0.30, random_state = 42)
 
-    # visualize_distribution(properties,df_train,'calculatedfinishedsquarefeet')
-    # visualize_distribution(properties,df_test,'calculatedfinishedsquarefeet')
-    #
-    # visualize_distribution(properties, df_train, 'structuretaxvaluedollarcnt')
-    # visualize_distribution(properties, df_test, 'structuretaxvaluedollarcnt')
+    if 0:
+        visualize_distribution(properties,df_train,'calculatedfinishedsquarefeet')
+        visualize_distribution(properties,df_test,'calculatedfinishedsquarefeet')
+
+        visualize_distribution(properties, df_train, 'structuretaxvaluedollarcnt')
+        visualize_distribution(properties, df_test, 'structuretaxvaluedollarcnt')
 
     ### Remove previous variables to keep some memory
     del properties, train,train_merged
@@ -78,8 +79,6 @@ def load_full_data():
     # Load the Datasets #
     # We need to load the datasets that will be needed to train our machine learning algorithms,
     #  handle our data and make predictions.
-    # Note that these datasets are the ones that are already provided once you enter the
-    # competition by accepting terms and conditions
 
     train_2016 = pd.read_csv('./data/train_2016_v2.csv', parse_dates=["transactiondate"])
     properties_2016 = pd.read_csv('./data/properties_2016.csv')
@@ -155,8 +154,6 @@ def load_2016_data():
     # Load the Datasets #
     # We need to load the datasets that will be needed to train our machine learning algorithms,
     #  handle our data and make predictions.
-    # Note that these datasets are the ones that are already provided once you enter the
-    # competition by accepting terms and conditions
 
     train_2016 = pd.read_csv('./data/train_2016_v2.csv', parse_dates=["transactiondate"])
     properties_2016 = pd.read_csv('./data/properties_2016.csv')

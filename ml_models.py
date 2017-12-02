@@ -21,10 +21,8 @@ def model_experiments(x_train,y_train,x_test):
 
     #Implement the Xgboost#
 
-    # We can now select the parameters for Xgboost and monitor the progress of results
-    # on our validation set. The explanation of the xgboost parameters and what they do
-    # can be found on the following link http://xgboost.readthedocs.io/en/latest/parameter.html #
-
+    # We select the parameters for Xgboost and monitor the progress of results
+    # on our validation set.
     dtrain = xgb.DMatrix(Xtrain, label=ytrain)
     dvalid = xgb.DMatrix(Xvalid, label=yvalid)
     dtest = xgb.DMatrix(x_test.values)
@@ -40,9 +38,6 @@ def model_experiments(x_train,y_train,x_test):
                       maximize=False, verbose_eval=10)
 
     # Predicting the results
-    # Let us now predict the target variable for our test dataset.
-    # All we have to do now is just fit the already trained model on the test set
-    # that we had made merging the sample file with properties dataset #
 
     Predicted_test_xgb = model_xgb.predict(dtest)
     # print Predicted_test_xgb
@@ -50,16 +45,4 @@ def model_experiments(x_train,y_train,x_test):
 
     return Predicted_test_xgb
 
-    # Submitting the Results
-    # Once again load the file and start submitting the results in each column
-
-    # sample_file = pd.read_csv('./data/sample_submission.csv')
-    # for c in sample_file.columns[sample_file.columns != 'ParcelId']:
-    #     sample_file[c] = Predicted_test_xgb
-
-    # print('Preparing the csv file ...')
-    # sample_file.to_csv('xgb_predicted_results.csv', index=False, float_format='%.4f')
-    # print("Finished writing the file")
-
-    # return predicted values
 

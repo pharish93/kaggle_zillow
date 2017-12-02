@@ -49,7 +49,7 @@ def random_forest_reg(x_train,y_train,x_test):
     X = x_train.values
     y = y_train.values
 
-    regr = RandomForestRegressor(n_estimators=250)
+    regr = RandomForestRegressor(n_estimators=150)
     regr.fit(X, y)
     Predicted_test = regr.predict(x_test.values)
     return Predicted_test

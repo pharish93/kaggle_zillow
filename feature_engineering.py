@@ -72,15 +72,12 @@ def missing_value_removal(df_train, df_test):
 
 
 def label_encoding(df_train, df_test):
-    # Label Encoding For Machine Learning &amp; Filling Missing Values
+    # Label Encoding For Machine Learning
     #
     # We are now label encoding our datasets. All of the machine learning algorithms
     # employed in scikit learn assume that the data being fed to them is in numerical form.
     # LabelEncoding ensures that all of our categorical variables are in numerical representation.
-    # Also note that we are filling the missing values in our dataset with a zero before label
-    # encoding them.
-    # This is to ensure that label encoder function does not experience any problems while
-    # carrying out its operation #
+
 
     lbl = LabelEncoder()
     for c in df_train.columns:
@@ -119,12 +116,10 @@ def new_features(df_train, df_test):
 def feature_selection(df_train, df_test):
     ### Rearranging the DataSets ###
 
-    # We will now drop the features that serve no useful purpose.
-    # We will also split our data and divide it into the representation
+    # We drop the features that serve no useful purpose.
+    # We split our data and divide it into the representation
     # to make it clear which features are to be treated as determinants
-    # in predicting the outcome for our target feature.
-    # Make sure to include the same features in the test set as were
-    # included in the training set #
+    # in predicting the outcome for our target feature
 
     # dropping properties which are not important or which are similar
 

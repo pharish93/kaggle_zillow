@@ -38,12 +38,14 @@ def main():
     x_train,x_test,y_train,y_test = feature_engineering(df_train,df_test)
 
     # Step 4  : Sending data to Machine Learning Model
+
+    # Model 1
+    # y_pred = linear_reg_model(x_train, y_train, x_test)
+    # Model 2
+    y_pred = random_forest_reg(x_train, y_train, x_test)
+    # Model 3
     # y_pred = xgb_model_experiments(x_train,y_train,x_test)
-
-    # y_pred = random_forest_reg(x_train, y_train, x_test)
-
-    y_pred = linear_reg_model(x_train, y_train, x_test)
-
+    # Model 4
     # y_pred = svm_model_experiments(x_train, y_train, x_test)
 
 
